@@ -1,0 +1,92 @@
+<!-- Based on Green & Seshadri AngularJS (O'Reilly) Ch 2. -->
+
+<html ng-app="myApp">
+
+  <body>
+  
+  <!-- Checkbox: SomeController.youCheckedIt will updated true/false in $scope. -->
+  <form ng-controller="SomeController">
+    <input type="checkbox" ng-model="youCheckedIt">
+  </form>
+  
+  <!-- Simple calculator example: *problem: does not computer needed amount when modifications are made by the server -->
+  <form ng-controller="StartUpControllerOriginal">
+    Starting: <input ng-change="computeNeeded()" ng-model="funding.startingEstimate">
+    Recommendation: {{funding.needed}}
+  </form>
+  
+  <!-- Using $watch() to update the field no matter how it gets updated -->
+  <form ng-controller="StartUpControllerImproved">
+    Starting: <input ng-model="funding.startingEstimate">
+    Recommendation: {{funding.needed}}
+  </form>
+  
+  <!-- Using a submit response -->
+  <form ng-submit="requestFunding()" ng-controller="StartUpControllerSubmit">
+    Starting: <input ng-change="computeNeeded()" ng-model="startingEstimate">
+    Recommendation: {{needed}}
+    <button>Fund my startup!</button>
+  </form>
+  
+  <!-- Using click event-handling -->
+  <form ng-submit="requestFunding()" ng-controller="StartUpControllerClick">
+    Starting: <input ng-change="computeNeeded()" ng-model="startingEstimate">
+    Recommendation: {{needed}}
+    <button>Fund my startup!</button>
+    <button ng-click="reset()">Reset</button>
+  </form>
+  
+  <!-- Angular Script -->
+  <script
+    src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js">
+  </script>
+  
+  <!-- Additional Scripts -->
+  <script>
+  
+    function StartUpControllerOriginal($scope) {
+      $scope.funding = { startingEstimate: 0 };
+      $scope.computeNeeded = function() {
+        $scope.needed = $scope.startingEstimate * 10;
+      };
+    }
+    
+    function StartUpControllerImproved($scope) {
+      $scope.funding = { startingEstimate: 0 }
+      
+      computeNeeded = function() {
+        $scope.funding.needed = $scope.funding.startingEstimate * 10;
+      };
+      
+      $scope.$watch('funding.startingEstimate', computeNeeded);
+    }
+    
+    function StartUpControllerSubmit($scope) {
+      $scope.computeNeeded = function() {
+        $scope.needed = $scope.startingEstimate * 10;
+      };
+      
+      $scope.requestFunding = function() {
+        window.alert("Sorry, please get more customers first.");
+      };
+    }
+    
+    function StartUpControllerClick($scope) {
+      $scope.computeNeeded = function() {
+        $scope.needed = $scope.startingEstimate * 10;
+      };
+      
+      $scope.requestFunding = function() {
+        window.alert("Sorry, please get more customers first.");
+      };
+      
+      $scope.reset= function() {
+        $scope.startingEstimate = 0;
+      };
+    }
+    
+  </script>
+    
+  </body>
+  
+</html>
